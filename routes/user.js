@@ -1,15 +1,15 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const auth = require("../middleware/userAuth");
-const User = require("../models/User");
+const mongoose = require("mongoose");
 
 const router = express.Router();
 
-router.get("/helloWorld", (req, res) => {
-  console.log('sqwdfwqef')
-  res.status(206).send('yay!ssssss')
-})
+const auth = require("../middleware/userAuth");
+
+// Must use this syntax because userAuth middleware already requires User.
+// Thus, schema is already registered.
+const User = mongoose.model('User');
 
 router.post("/register", (req, res) => {
   const today = new Date();
