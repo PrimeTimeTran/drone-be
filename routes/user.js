@@ -1,11 +1,17 @@
 const express = require("express");
-const users = express.Router();
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const auth = require("../middleware/userAuth");
 const User = require("../models/User");
 
-users.post("/register", (req, res) => {
+const router = express.Router();
+
+router.get("/helloWorld", (req, res) => {
+  console.log('sqwdfwqef')
+  res.status(206).send('yay!ssssss')
+})
+
+router.post("/register", (req, res) => {
   const today = new Date();
   const userData = {
     first_name: req.body.first_name,
@@ -38,7 +44,7 @@ users.post("/register", (req, res) => {
     });
 });
 
-users.post("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
   const user = await User.findOne({
     email: req.body.email,
   });
@@ -66,8 +72,8 @@ users.post("/login", async (req, res) => {
   }
 });
 
-users.get("/me", auth, (req, res) => {
+router.get("/me", auth, (req, res) => {
   res.status(200).json({ status: "success", data: req.user });
 });
 
-module.exports = users;
+module.exports = router;
