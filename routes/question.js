@@ -10,6 +10,7 @@ const Questions = require("../models/question");
 router.get("/", async (req, res) => {
   try {
     const questions = await Questions.find();
+    console.log({questions})
     res.json(questions);
   } catch (err) {
     res.status(500)({ message: err.message });
@@ -56,7 +57,7 @@ router.post("/", async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 });
-//Updating one question
+
 router.patch("/:id", getQuestions, async (req, res) => {
   if (req.body.question != null) {
     res.questions.question = req.body.question;
@@ -235,7 +236,7 @@ const mySet = [
   },
 ];
 
-router.get("/importdefault", async (req, res, next) => {
+router.get("/generate", async (req, res, next) => {
   try {
     const go = await mySet.map(
       async (el) =>

@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const questionsSchema = new mongoose.Schema({
   user: {
     type: mongoose.Types.ObjectId,
-    // required:true,
     ref: "User",
   },
   free: {

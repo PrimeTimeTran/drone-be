@@ -9,17 +9,18 @@ const auth = require("../middleware/userAuth");
 
 // Must use this syntax because userAuth middleware already requires User.
 // Thus, schema is already registered.
-const User = mongoose.model('User');
+const User = mongoose.model("User");
 
 router.post("/register", (req, res) => {
   const today = new Date();
   const userData = {
-    first_name: req.body.first_name,
-    last_name: req.body.last_name,
+    created: today,
     email: req.body.email,
     password: req.body.password,
-    created: today,
+    last_name: req.body.last_name,
+    first_name: req.body.first_name,
   };
+
   User.findOne({
     email: req.body.email,
   })
@@ -45,20 +46,16 @@ router.post("/register", (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const user = await User.findOne({
-    email: req.body.email,
-  });
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
   if (user) {
-    const passwordCorrect = bcrypt.compareSync(
-      req.body.password,
-      user.password
-    );
+    const passwordCorrect = bcrypt.compareSync(password, user.password);
     if (passwordCorrect) {
       const payload = {
         _id: user._id,
-        first_name: user.first_name,
-        last_name: user.last_name,
         email: user.email,
+        last_name: user.last_name,
+        first_name: user.first_name,
       };
       const token = jwt.sign(payload, process.env.SECRET, {
         expiresIn: 1440,
