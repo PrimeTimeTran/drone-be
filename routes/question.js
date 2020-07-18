@@ -1,12 +1,10 @@
+
 const express = require("express");
-const mongoose = require("mongoose");
 
 const router = express.Router();
 
-// const Questions = mongoose.model('Question');
 const Questions = require("../models/question");
 
-//getting all questions
 router.get("/", async (req, res) => {
   try {
     const questions = await Questions.find();
@@ -16,7 +14,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Show my questions only
 router.get("/me", async (req, res) => {
   try {
     const questions = await Questions.find().or([
@@ -28,7 +25,7 @@ router.get("/me", async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-//Deleting one of my questions
+
 router.delete("/me/:id", getQuestions, async (req, res) => {
   try {
     const deletedQuestions = await res.questions.remove();
@@ -38,7 +35,6 @@ router.delete("/me/:id", getQuestions, async (req, res) => {
   }
 });
 
-//Creating one questions
 router.post("/", async (req, res) => {
   const questions = new Questions({
     user: req.user._id,
@@ -98,7 +94,33 @@ async function getQuestions(req, res, next) {
   next();
 }
 
-const mySet = [
+router.get("/generate", async (req, res, next) => {
+  try {
+    const go = await questionSeeds.map(
+      async (el) =>
+        await Questions.create({
+          ...el,
+          free: true,
+          // user: "your admin id"
+        })
+    );
+    const results = await Promise.all(go);
+    return res.status(201).json(results);
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+});
+// what s wrong
+// yeah I can show you a couple of things
+//getting one questions
+router.get("/:id", getQuestions, (req, res) => {
+  res.json(res.questions);
+});
+
+module.exports = router;
+
+
+const questionSeeds = [
   {
     question: "What temperature does water boil at?",
     optionA: "50 degrees Celcius",
@@ -234,28 +256,3 @@ const mySet = [
     answer: "In the beginning",
   },
 ];
-
-router.get("/generate", async (req, res, next) => {
-  try {
-    const go = await mySet.map(
-      async (el) =>
-        await Questions.create({
-          ...el,
-          free: true,
-          // user: "your admin id"
-        })
-    );
-    const results = await Promise.all(go);
-    return res.status(201).json(results);
-  } catch (err) {
-    return res.status(500).json({ message: err.message });
-  }
-});
-// what s wrong
-// yeah I can show you a couple of things
-//getting one questions
-router.get("/:id", getQuestions, (req, res) => {
-  res.json(res.questions);
-});
-
-module.exports = router;
