@@ -11,41 +11,19 @@ const auth = require("../middleware/userAuth");
 // Thus, schema is already registered.
 const User = mongoose.model("User");
 
-router.post("/register", (req, res) => {
-  const today = new Date();
-  const userData = {
-    created: today,
-    email: req.body.email,
-    password: req.body.password,
-    last_name: req.body.last_name,
-    first_name: req.body.first_name,
-  };
-
-  User.findOne({
-    email: req.body.email,
-  })
-    .then((user) => {
-      if (!user) {
-        bcrypt.hash(req.body.password, 10, (err, hash) => {
-          userData.password = hash;
-          User.create(userData)
-            .then((user) => {
-              res.json({ status: user.email + "Registered!" });
-            })
-            .catch((err) => {
-              res.status(400).json({ error: err });
-            });
-        });
-      } else {
-        res.json({ error: "User already exists" });
-      }
-    })
-    .catch((err) => {
-      res.status(400).send("error:" + err);
-    });
+router.post("", async (req, res) => {
+  try {
+    const user = new User(req.body);
+    await user.save();
+    const token = await user.generateAuthToken();
+    res.status(201).send({ data: user, token });
+  } catch (e) {
+    console.log(e)
+    res.status(404).send({ error: "Bad Request", body: e });
+  }
 });
 
-router.post("/login", async (req, res) => {
+router.post("/users/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (user) {
