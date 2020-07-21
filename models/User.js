@@ -1,19 +1,25 @@
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
 const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema({
   first_name: {
+    trim: true,
     type: String,
   },
   last_name: {
+    trim: true,
     type: String,
   },
   email: {
+    trim: true,
     type: String,
     unique: true,
     required: true,
   },
   password: {
+    trim: true,
+    minlength: 6,
     type: String,
     required: true,
   },
@@ -45,6 +51,14 @@ userSchema.methods.toJSON = function () {
   delete userObject.tokens;
   return userObject;
 };
+
+userSchema.pre("save", async function (next) {
+  const user = this;
+  if (user.isModified("password")) {
+    user.password = await bcrypt.hash(user.password, 8);
+  }
+  next();
+});
 
 const User = mongoose.model("User", userSchema);
 

@@ -18,12 +18,12 @@ router.post("", async (req, res) => {
     const token = await user.generateAuthToken();
     res.status(201).send({ data: user, token });
   } catch (e) {
-    console.log(e)
-    res.status(404).send({ error: "Bad Request", body: e });
+    console.log(e);
+    res.status(404).send({ error: "Bad Request" });
   }
 });
 
-router.post("/users/login", async (req, res) => {
+router.post("/login", async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
   if (user) {
