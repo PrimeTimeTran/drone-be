@@ -7,6 +7,7 @@ require("./db/mongoose");
 
 const userRouter = require("./routes/user");
 const questionRouter = require("./routes/question");
+const quizRouter = require("./routes/quiz");
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use(router);
 
 app.use("/users", userRouter);
 app.use("/questions", auth, questionRouter);
+app.use("/quizzes", auth, quizRouter);
 
 app.listen(port, () => {
   console.log("Server is running on port:" + port);

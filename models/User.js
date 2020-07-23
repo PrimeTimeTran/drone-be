@@ -37,9 +37,21 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
+userSchema.virtual("questions", {
+  ref: "Question",
+  localField: "_id",
+  foreignField: "owner",
+});
+
+userSchema.virtual("quizzes", {
+  ref: "Quiz",
+  localField: "_id",
+  foreignField: "user",
+});
+
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
-  const token = jwt.sign({ _id: user._id.toString() }, "mySecret", {expiresIn: '1 year'});
+  const token = jwt.sign({ _id: user._id.toString() }, process.env.SECRET);
   user.tokens = user.tokens.concat({ token });
   await user.save();
   return token;
