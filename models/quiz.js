@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 
+const questionSchema = require('../models/question').questionSchema
+
 const quizSchema = new mongoose.Schema(
   {
     user: {
@@ -7,6 +9,7 @@ const quizSchema = new mongoose.Schema(
       type: mongoose.Types.ObjectId,
     },
     score: Number,
+    questions: [questionSchema]
   },
   {
     timestamps: true,

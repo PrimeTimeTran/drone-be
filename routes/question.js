@@ -2,7 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 
-const Question = require("../models/question");
+const Question = require("../models/question").question;
 const getQuestions = require("../middleware/questions");
 const questionSeeds = require('../seeds/questions')
 

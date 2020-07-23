@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const questionsSchema = new mongoose.Schema({
+const questionSchema = new mongoose.Schema({
   user: {
     ref: "User",
     type: mongoose.Types.ObjectId,
@@ -39,4 +39,7 @@ const questionsSchema = new mongoose.Schema({
   }
 });
 
-module.exports = mongoose.model("Question", questionsSchema);
+module.exports = {
+  questionSchema,
+  question: mongoose.model("Question", questionSchema),
+}
