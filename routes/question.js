@@ -30,7 +30,8 @@ router.post("/", async (req, res) => {
 
 router.get("/me", async (req, res) => {
   try {
-    const questions = await Question.find({ owner: req.user._id });
+    // const questions = await Question.find({ owner: req.user._id });
+    const questions = await Question.find();
     res.json(questions);
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -75,6 +76,7 @@ router.patch("/:id", getQuestions, async (req, res) => {
 
 router.get("/generate", async (req, res, next) => {
   try {
+    console.log({questionSeeds})
     const go = await questionSeeds.map(
       async (el) =>
         await Question.create({

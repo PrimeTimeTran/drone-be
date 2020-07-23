@@ -4,11 +4,11 @@ const questionSchema = require('../models/question').questionSchema
 
 const quizSchema = new mongoose.Schema(
   {
+    score: Number,
     user: {
       ref: "User",
       type: mongoose.Types.ObjectId,
     },
-    score: Number,
     questions: [questionSchema]
   },
   {

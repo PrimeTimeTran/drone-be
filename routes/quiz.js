@@ -15,9 +15,15 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+  const questions = [];
+  for (questionId in req.body.questions) {
+    const question = Question.findById(questionId);
+    questions.push = question;
+  }
   const quiz = new Quiz({
-    ...req.body,
+    questions,
     user: req.user._id,
+    score: parseInt(req.body.score),
   });
   await quiz.save();
   res.json(quiz);

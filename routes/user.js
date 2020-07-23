@@ -29,15 +29,7 @@ router.post("/login", async (req, res) => {
   if (user) {
     const passwordCorrect = bcrypt.compareSync(password, user.password);
     if (passwordCorrect) {
-      const payload = {
-        _id: user._id,
-        email: user.email,
-        last_name: user.last_name,
-        first_name: user.first_name,
-      };
-      const token = jwt.sign(payload, process.env.SECRET, {
-        expiresIn: 1440,
-      });
+      const token = await user.generateAuthToken();
       res.json({ data: token });
     } else {
       res.status(400).json({ error: "Password Incorrect" });
@@ -48,6 +40,7 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/me", auth, (req, res) => {
+  console.log('MEEEE', req.user)
   res.status(200).json({ status: "success", data: req.user });
 });
 
