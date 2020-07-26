@@ -10,7 +10,6 @@ const userRouter = require("./routes/user");
 const questionRouter = require("./routes/question");
 const quizRouter = require("./routes/quiz");
 
-
 const app = express();
 const auth = require("./middleware/userAuth");
 

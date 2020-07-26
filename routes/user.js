@@ -39,6 +39,20 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.get("/check-email", async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.query.email });
+    if (user) {
+      res.status(200).json({ emailFound: true });
+    } else {
+      res.status(201).json({ emailFound: false, message: 'Not found' });
+    }
+  } catch (e) {
+    console.log(e);
+    res.status(500).send({ error: "Bad Request" });
+  }
+});
+
 router.get("/me", auth, (req, res) => {
   res.status(200).json({ status: "success", data: req.user });
 });
