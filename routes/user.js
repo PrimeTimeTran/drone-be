@@ -16,7 +16,7 @@ router.post("", async (req, res) => {
     const user = new User(req.body);
     await user.save();
     const token = await user.generateAuthToken();
-    res.status(201).send({ data: user, token });
+    res.status(201).send({ token });
   } catch (e) {
     console.log(e);
     res.status(404).send({ error: "Bad Request" });
@@ -30,7 +30,7 @@ router.post("/login", async (req, res) => {
     const passwordCorrect = bcrypt.compareSync(password, user.password);
     if (passwordCorrect) {
       const token = await user.generateAuthToken();
-      res.json({ data: token });
+      res.json({ token });
     } else {
       res.status(400).json({ error: "Password Incorrect" });
     }
@@ -40,7 +40,6 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/me", auth, (req, res) => {
-  console.log('MEEEE', req.user)
   res.status(200).json({ status: "success", data: req.user });
 });
 
