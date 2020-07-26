@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const dotenv = require("dotenv");
 const cors = require("cors");
+dotenv.config();
 
 require("./db/mongoose");
 
@@ -9,7 +10,6 @@ const userRouter = require("./routes/user");
 const questionRouter = require("./routes/question");
 const quizRouter = require("./routes/quiz");
 
-dotenv.config();
 
 const app = express();
 const auth = require("./middleware/userAuth");
