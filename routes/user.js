@@ -7,6 +7,11 @@ const router = express.Router();
 
 const auth = require("../middleware/userAuth");
 
+const {
+  sendWelcomeEmail,
+  accountDeletionFollowupEmail,
+} = require("../emails/account");
+
 // Must use this syntax because userAuth middleware already requires User.
 // Thus, schema is already registered.
 const User = mongoose.model("User");
@@ -16,6 +21,7 @@ router.post("", async (req, res) => {
     const user = new User(req.body);
     await user.save();
     const token = await user.generateAuthToken();
+    sendWelcomeEmail(user.email, user.first_name);
     res.status(201).send({ token });
   } catch (e) {
     console.log(e);
