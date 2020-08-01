@@ -10,8 +10,8 @@ router.get("/", async (req, res) => {
   try {
     const questions = await Question.find();
     res.json(questions);
-  } catch (err) {
-    res.status(500)({ message: err.message });
+  } catch (e) {
+    res.status(500).json({ message: e.message });
   }
 });
 
@@ -23,8 +23,8 @@ router.post("/", async (req, res) => {
   try {
     const newQuestion = await question.save();
     res.status(201).json(newQuestion);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
+  } catch (e) {
+    res.status(400).json({ message: e.message });
   }
 });
 
@@ -33,8 +33,8 @@ router.get("/me", async (req, res) => {
     // const questions = await Question.find({ owner: req.user._id });
     const questions = await Question.find();
     res.json(questions);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  } catch (e) {
+    res.status(500).json({ message: e.message });
   }
 });
 
@@ -42,8 +42,8 @@ router.delete("/me/:id", getQuestions, async (req, res) => {
   try {
     const deletedQuestions = await res.questions.remove();
     res.json(deletedQuestions);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  } catch (e) {
+    res.status(500).json({ message: e.message });
   }
 });
 
@@ -69,14 +69,13 @@ router.patch("/:id", getQuestions, async (req, res) => {
   try {
     const updatedQuestions = await res.questions.save();
     res.json(updatedQuestions);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
+  } catch (e) {
+    res.status(400).json({ message: e.message });
   }
 });
 
 router.get("/generate", async (req, res, next) => {
   try {
-    console.log({questionSeeds})
     const go = await questionSeeds.map(
       async (el) =>
         await Question.create({
@@ -86,8 +85,8 @@ router.get("/generate", async (req, res, next) => {
     );
     const results = await Promise.all(go);
     return res.status(201).json(results);
-  } catch (err) {
-    return res.status(500).json({ message: err.message });
+  } catch (e) {
+    return res.status(500).json({ message: e.message });
   }
 });
 

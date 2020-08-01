@@ -21,6 +21,7 @@
     "jwt-decode": "^2.2.0",
     "mongodb": "^3.5.7",
     "mongoose": "^5.9.14",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "validator": "^12.1.0"
   }
 }

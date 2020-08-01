@@ -11,8 +11,8 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   const quiz = await new Quiz({
-    questions: req.body.questionIds,
     user: req.user._id,
+    questions: req.body.questionIds,
     score: parseInt(req.body.score),
   });
   await quiz.save();
