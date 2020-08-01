@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 
-const questionSchema = require('../models/question').questionSchema
-
 const quizSchema = new mongoose.Schema(
   {
     score: Number,
@@ -9,7 +7,12 @@ const quizSchema = new mongoose.Schema(
       ref: "User",
       type: mongoose.Types.ObjectId,
     },
-    questions: [questionSchema]
+    questions: [
+      {
+        ref: "Question",
+        type: mongoose.Schema.Types.ObjectId,
+      },
+    ],
   },
   {
     timestamps: true,
@@ -21,5 +24,6 @@ quizSchema.methods.toJSON = function () {
   delete quiz.user;
   return quiz;
 };
+
 
 module.exports = mongoose.model("Quiz", quizSchema);

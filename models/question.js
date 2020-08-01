@@ -36,7 +36,13 @@ const questionSchema = new mongoose.Schema({
   owner: {
     ref: "User",
     type: mongoose.Schema.Types.ObjectId
-  }
+  },
+  quizzes: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Quiz"
+    }
+  ]
 });
 
 module.exports = {

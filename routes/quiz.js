@@ -3,25 +3,15 @@ const express = require("express");
 const router = express.Router();
 
 const Quiz = require("../models/quiz");
-const Question = require("../models/question").question;
 
 router.get("/", async (req, res) => {
-  const quizzes = await Quiz.find({ user: req.user._id });
-  for (const quiz of quizzes) {
-    const questions = await Question.find();
-    quiz.questions = questions;
-  }
+  const quizzes = await Quiz.find({ user: req.user._id }).populate('questions');
   res.json(quizzes);
 });
 
 router.post("/", async (req, res) => {
-  const questions = [];
-  for (questionId in req.body.questions) {
-    const question = Question.findById(questionId);
-    questions.push = question;
-  }
-  const quiz = new Quiz({
-    questions,
+  const quiz = await new Quiz({
+    questions: req.body.questionIds,
     user: req.user._id,
     score: parseInt(req.body.score),
   });
