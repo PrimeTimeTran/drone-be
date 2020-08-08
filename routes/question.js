@@ -38,10 +38,16 @@ router.get("/me", async (req, res) => {
   }
 });
 
-router.delete("/me/:id", getQuestions, async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
-    const deletedQuestions = await res.questions.remove();
-    res.json(deletedQuestions);
+    const question = await Question.findOneAndDelete({
+      _id: req.params.id,
+      owner: req.user._id,
+    });
+
+    if (!question) return res.status(404).send();
+
+    res.status(201).send(question);
   } catch (e) {
     res.status(500).json({ message: e.message });
   }
