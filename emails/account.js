@@ -6,6 +6,7 @@ sgMail.setApiKey(sendgridApiKey);
 
 const templates = {
   register: "d-8cf7a61a05a446bfa310932fbb9decd3",
+  "reset-password": "d-cc51b74e5067489f9b6643fc5165d0e6"
 };
 
 function sendEmail(data) {
@@ -13,10 +14,7 @@ function sendEmail(data) {
     to: data.receiver,
     from: data.sender,
     templateId: templates[data.templateName],
-    dynamic_template_data: {
-      Sender_Name: "Loi Van Tran",
-      Sender_Address: '2405 Nugget Lane',
-    },
+    dynamic_template_data: data.dynamic_template_data,
   };
   sgMail.send(msg, (error, result) => {
     if (error) {
@@ -35,10 +33,24 @@ const sendWelcomeEmail = (email, name) => {
     sender: "loi@dronestudyguide.com",
     dynamic_template_data: {
       name,
-   }
+      Sender_Name: "Loi Van Tran",
+      Sender_Address: '2405 Nugget Lane',
+    }
   };
   sendEmail(data)
 };
+
+const sendPasswordResetEmail = (email, url) => {
+  const data = {
+    receiver: email,
+    templateName: "reset-password",
+    sender: "loi@dronestudyguide.com",
+    dynamic_template_data: {
+      Reset_URL: url
+    }
+  };
+  sendEmail(data)
+}
 
 const accountDeletionFollowupEmail = (email, name) => {
   sgMail.send({
@@ -51,5 +63,6 @@ const accountDeletionFollowupEmail = (email, name) => {
 
 module.exports = {
   sendWelcomeEmail,
+  sendPasswordResetEmail,
   accountDeletionFollowupEmail,
 };

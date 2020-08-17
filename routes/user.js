@@ -9,6 +9,7 @@ const auth = require("../middleware/userAuth");
 
 const {
   sendWelcomeEmail,
+  sendPasswordResetEmail,
   accountDeletionFollowupEmail,
 } = require("../emails/account");
 
@@ -49,9 +50,13 @@ router.get("/check-email", async (req, res) => {
   try {
     const user = await User.findOne({ email: req.query.email });
     if (user) {
+      const token = jwt.sign({ _id: user._id.toString() }, process.env.SECRET, {
+        expiresIn: "7 days",
+      });
+      sendPasswordResetEmail(user.email, process.env.FRONTEND_HOST + "&token=" + token);
       res.status(200).json({ emailFound: true });
     } else {
-      res.status(201).json({ emailFound: false, message: 'Not found' });
+      res.status(201).json({ emailFound: false, message: "Not found" });
     }
   } catch (e) {
     console.log(e);
