@@ -33,6 +33,12 @@ const questionSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  photo_url: {
+    type: String
+  },
+  subtitle: {
+    type: String
+  },
   owner: {
     ref: "User",
     type: mongoose.Schema.Types.ObjectId
