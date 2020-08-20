@@ -53,7 +53,7 @@ router.get("/check-email", async (req, res) => {
       const token = jwt.sign({ _id: user._id.toString() }, process.env.SECRET, {
         expiresIn: "7 days",
       });
-      sendPasswordResetEmail(user.email, process.env.FRONTEND_HOST + "&token=" + token);
+      sendPasswordResetEmail(user.email, process.env.FRONTEND_HOST + "/update-password&token=" + token);
       res.status(200).json({ emailFound: true });
     } else {
       res.status(201).json({ emailFound: false, message: "Not found" });
