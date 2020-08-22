@@ -53,7 +53,10 @@ router.get("/check-email", async (req, res) => {
       const token = jwt.sign({ _id: user._id.toString() }, process.env.SECRET, {
         expiresIn: "7 days",
       });
-      sendPasswordResetEmail(user.email, process.env.FRONTEND_HOST + "/update-password/" + token);
+      sendPasswordResetEmail(
+        user.email,
+        process.env.FRONTEND_HOST + "update-password/" + token
+      );
       res.status(200).json({ emailFound: true });
     } else {
       res.status(201).json({ emailFound: false, message: "Not found" });
@@ -66,6 +69,20 @@ router.get("/check-email", async (req, res) => {
 
 router.get("/me", auth, (req, res) => {
   res.status(200).json({ status: "success", data: req.user });
+});
+
+router.post("/password/:token", async (req, res) => {
+  const token = req.params.token
+  const decoded = jwt.verify(token, process.env.SECRET);
+  const user = await User.findOne({ _id: decoded._id });
+  if (user) {
+    console.log({user, password: req.body.password})
+    user.password = req.body.password
+    await user.save()
+    res.status(200).json({ status: "success"});
+  } else  {
+    res.status(404).json({ status: "Failure"});
+  }
 });
 
 module.exports = router;
