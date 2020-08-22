@@ -76,7 +76,6 @@ router.post("/password/:token", async (req, res) => {
   const decoded = jwt.verify(token, process.env.SECRET);
   const user = await User.findOne({ _id: decoded._id });
   if (user) {
-    console.log({user, password: req.body.password})
     user.password = req.body.password
     await user.save()
     res.status(200).json({ status: "success"});
