@@ -32,8 +32,8 @@ router.post("/", async (req, res) => {
 
 router.get("/me", async (req, res) => {
   try {
-    // const questions = await Question.find({ owner: req.user._id });
-    const questions = await Question.find();
+    const offset = Math.floor(Math.random() * 130) + 1
+    const questions = await Question.find().skip(offset).limit(20)
     res.json(questions);
   } catch (e) {
     res.status(500).json({ message: e.message });
