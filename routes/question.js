@@ -4,7 +4,9 @@ const router = express.Router();
 
 const Question = require("../models/question").question;
 const getQuestions = require("../middleware/questions");
-const questionSeeds = require('../seeds/questions')
+
+const csv = require('csv-parser')
+const fs = require('fs')
 
 router.get("/", async (req, res) => {
   try {
@@ -82,15 +84,22 @@ router.patch("/:id", getQuestions, async (req, res) => {
 
 router.get("/generate", async (req, res, next) => {
   try {
-    const go = await questionSeeds.map(
-      async (el) =>
-        await Question.create({
-          ...el,
+    const questions = []
+    fs.createReadStream(__dirname + '/data.csv')
+      .pipe(csv())
+      .on('data', async (data) => {
+        const answer = 'option' + data.answer.toUpperCase()
+        const question = await Question.create({
+          ...data,
           free: true,
+          answer: data[answer],
         })
-    );
-    const results = await Promise.all(go);
-    return res.status(201).json(results);
+        questions.push(question)
+      })
+      .on('end', async () => {
+        const results = await Promise.all(questions);
+        return res.status(201).json(results);
+      });
   } catch (e) {
     return res.status(500).json({ message: e.message });
   }
