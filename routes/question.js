@@ -34,7 +34,7 @@ router.get("/me", async (req, res) => {
   try {
     const offset = Math.floor(Math.random() * 120) + 1;
     // const questions = await Question.find();
-    const questions = await Question.find().skip(offset).limit(30)
+    const questions = await Question.find().skip(offset).limit(30);
     if (questions) {
       res.json(questions);
     } else {
@@ -120,7 +120,7 @@ router.put("/:id", async (req, res) => {
     {
       ...req.body,
     },
-    function(err, result) {
+    function (err, result) {
       if (err) {
         res.send(err);
       } else {
@@ -128,6 +128,13 @@ router.put("/:id", async (req, res) => {
       }
     }
   );
+});
+
+router.get("/delete-all", async (req, res) => {
+  const go = await Question.remove({}, () => {
+    console.log("aoaoaoao");
+  });
+  res.status(201).json({message: 'success!'});
 });
 
 module.exports = router;
