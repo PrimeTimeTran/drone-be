@@ -3,15 +3,16 @@ const express = require("express");
 const router = express.Router();
 
 const Question = require("../models/question").question;
-const getQuestions = require("../middleware/questions");
+const auth = require("../middleware/userAuth");
 
 const csv = require("csv-parser");
 const fs = require("fs");
 
-router.get("/", async (req, res) => {
+router.get("/mine", auth, async (req, res) => {
   try {
-    const questions = await Question.find();
-    res.json(questions);
+    const questions = await Question.find({ owner: req.user._id });
+    const otherQuestions = await Question.find({ owner: null });
+    res.json(questions.concat(otherQuestions));
   } catch (e) {
     res.status(500).json({ message: e.message });
   }
@@ -30,10 +31,9 @@ router.post("/", async (req, res) => {
   }
 });
 
-router.get("/me", async (req, res) => {
+router.get("/quiz", async (req, res) => {
   try {
     const offset = Math.floor(Math.random() * 120) + 1;
-    // const questions = await Question.find();
     const questions = await Question.find().skip(offset).limit(30);
     if (questions) {
       res.json(questions);
@@ -60,33 +60,6 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// router.patch("/:id", getQuestions, async (req, res) => {
-//   if (req.body.question != null) {
-//     res.questions.question = req.body.question;
-//   }
-//   if (req.body.optionA != null) {
-//     res.questions.optionA = req.body.optionA;
-//   }
-//   if (req.body.optionB != null) {
-//     res.questions.optionB = req.body.optionB;
-//   }
-//   if (req.body.optionC != null) {
-//     res.questions.optionC = req.body.optionC;
-//   }
-//   if (req.body.optionD != null) {
-//     res.questions.optionD = req.body.optionD;
-//   }
-//   if (req.body.answer != null) {
-//     res.questions.answer = req.body.answer;
-//   }
-//   try {
-//     const updatedQuestions = await res.questions.save();
-//     res.json(updatedQuestions);
-//   } catch (e) {
-//     res.status(400).json({ message: e.message });
-//   }
-// });
-
 router.get("/generate", async (req, res, next) => {
   try {
     const questions = [];
@@ -110,10 +83,6 @@ router.get("/generate", async (req, res, next) => {
   }
 });
 
-// router.get("/:id", getQuestions, (req, res) => {
-//   res.json(res.questions);
-// });
-
 router.put("/:id", async (req, res) => {
   const question = await Question.findByIdAndUpdate(
     { _id: req.params.id },
@@ -134,7 +103,7 @@ router.get("/delete-all", async (req, res) => {
   const go = await Question.remove({}, () => {
     console.log("aoaoaoao");
   });
-  res.status(201).json({message: 'success!'});
+  res.status(201).json({ message: "success!  " });
 });
 
 module.exports = router;
