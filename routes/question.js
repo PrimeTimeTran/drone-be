@@ -32,9 +32,9 @@ router.post("/", async (req, res) => {
 
 router.get("/me", async (req, res) => {
   try {
-    const offset = Math.floor(Math.random() * 130) + 1;
-    const questions = await Question.find();
-    // const questions = await Question.find().skip(offset).limit(20)
+    const offset = Math.floor(Math.random() * 120) + 1;
+    // const questions = await Question.find();
+    const questions = await Question.find().skip(offset).limit(30)
     if (questions) {
       res.json(questions);
     } else {
