@@ -33,8 +33,9 @@ router.post("/", async (req, res) => {
 
 router.get("/quiz", async (req, res) => {
   try {
-    const offset = Math.floor(Math.random() * 120) + 1;
-    const questions = await Question.find().skip(offset).limit(30);
+    // const offset = Math.floor(Math.random() * 120) + 1;
+    // const questions = await Question.find().skip(offset).limit(30);
+    const questions = await Question.aggregate().sample(30)
     if (questions) {
       res.json(questions);
     } else {
@@ -100,8 +101,8 @@ router.put("/:id", async (req, res) => {
 });
 
 router.get("/delete-all", async (req, res) => {
-  const go = await Question.remove({}, () => {
-    console.log("aoaoaoao");
+  await Question.remove({}, () => {
+    console.log("Removed all questions");
   });
   res.status(201).json({ message: "success!  " });
 });

@@ -59,7 +59,7 @@ router.get("/check-email", async (req, res) => {
       );
       res.status(200).json({ emailFound: true });
     } else {
-      res.status(201).json({ emailFound: false, message: "Not found" });
+      res.status(201).json({ emailFound: false, message: "Email Not found" });
     }
   } catch (e) {
     console.log(e);
