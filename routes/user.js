@@ -46,16 +46,20 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.post('/auth-login', async (req, res) => {
-  const { email, password } = req.body;
+router.post("/auth-login", async (req, res) => {
+  const { email } = req.body;
   const user = await User.findOne({ email });
   if (user) {
     const token = await user.generateAuthToken();
     res.json({ token });
   } else {
-    res.status(400).json({ error: "Email not found" });
+    const user = new User(req.body);
+    await user.save();
+    const token = await user.generateAuthToken();
+    sendWelcomeEmail(user.email, user.first_name);
+    res.status(201).send({ token });
   }
-})
+});
 
 router.get("/check-email", async (req, res) => {
   try {
@@ -83,15 +87,15 @@ router.get("/me", auth, (req, res) => {
 });
 
 router.post("/password/:token", async (req, res) => {
-  const token = req.params.token
+  const token = req.params.token;
   const decoded = jwt.verify(token, process.env.SECRET);
   const user = await User.findOne({ _id: decoded._id });
   if (user) {
-    user.password = req.body.password
-    await user.save()
-    res.status(200).json({ status: "success"});
-  } else  {
-    res.status(404).json({ status: "Failure"});
+    user.password = req.body.password;
+    await user.save();
+    res.status(200).json({ status: "success" });
+  } else {
+    res.status(404).json({ status: "Failure" });
   }
 });
 
