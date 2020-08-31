@@ -46,6 +46,17 @@ router.post("/login", async (req, res) => {
   }
 });
 
+router.post('/auth-login', async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email });
+  if (user) {
+    const token = await user.generateAuthToken();
+    res.json({ token });
+  } else {
+    res.status(400).json({ error: "Email not found" });
+  }
+})
+
 router.get("/check-email", async (req, res) => {
   try {
     const user = await User.findOne({ email: req.query.email });
