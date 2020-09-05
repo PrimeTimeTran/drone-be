@@ -34,8 +34,8 @@ router.post("/", async (req, res) => {
 router.get("/quiz", async (req, res) => {
   try {
     // const offset = Math.floor(Math.random() * 120) + 1;
-    // const questions = await Question.find().skip(offset).limit(30);
-    const questions = await Question.aggregate().sample(30)
+    const questions = await Question.find().skip(offset).limit(30);
+    // const questions = await Question.aggregate().sample(1)
     if (questions) {
       res.json(questions);
     } else {
