@@ -16,7 +16,7 @@ function sendEmail(data) {
     templateId: templates[data.templateName],
     dynamic_template_data: data.dynamic_template_data,
   };
-  sgMail.send(msg, (error, result) => {
+  sgMail.send(msg, (error, _) => {
     if (error) {
       console.log(error);
     } else {
