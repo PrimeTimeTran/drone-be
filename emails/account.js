@@ -30,10 +30,10 @@ const sendWelcomeEmail = (email, name) => {
     name,
     receiver: email,
     templateName: "register",
-    sender: "loi@dronestudyguide.com",
+    sender: "danny@faapart107pilot.com",
     dynamic_template_data: {
       name,
-      Sender_Name: "Loi Van Tran",
+      Sender_Name: "Daniel Pullara",
       Sender_Address: '2405 Nugget Lane',
     }
   };
