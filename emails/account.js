@@ -55,7 +55,7 @@ const sendPasswordResetEmail = (email, url) => {
 const accountDeletionFollowupEmail = (email, name) => {
   sgMail.send({
     to: email,
-    from: "loi@dronestudyguide.com",
+    from: "danny@faapart107pilot.com",
     subject: "So sad we've lost you",
     text: `Thank you for using our service ${name}. We sent a short survey to learn what we could do to make you want to stay. We'd appreciate it if you'd answer our question!`,
   });
